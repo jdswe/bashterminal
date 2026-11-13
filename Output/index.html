@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Guía paso a paso para personalizar y optimizar la terminal Bash de Ubuntu integrando Oh My Posh, Eza, fuentes Nerd Fonts y FZF.">
+  <meta name="theme-color" content="#0b0d0c">
+  <title>Configuración de Terminal Bash en Ubuntu — Guía paso a paso</title>
+  <link rel="stylesheet" href="assets/css/guide.css">
+  <style>
+    :root{--font-sans:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--radius-xl:12px;--radius:8px}
+    html{font-size:16px}body{font-family:var(--font-sans);line-height:1.6;letter-spacing:-0.01em}
+    h1,h2,h3,.guide-section__title,.guide-hero__title,.guide-sidebar__title,.guide-video-card__title{font-family:var(--font-sans);letter-spacing:-0.02em;font-weight:600}
+    .guide-hero__title{font-size:2rem;line-height:1.2}.guide-section__title{font-size:1.25rem}.guide-sidebar__title{font-size:1.125rem;font-weight:700}
+    .guide-p,.guide-note,.guide-callout__body,.guide-figure__caption,.guide-hero__lead{font-family:var(--font-sans);font-weight:400}
+    .guide-p,.guide-note,.guide-callout__body{font-size:0.95rem}
+    code,.inline-code,.code-panel__pre code,kbd{font-family:var(--font-mono)}
+    .site-control,.copy-btn,.step-toggle-btn,.reset-progress-btn,.toc-toggle-btn,.social-btn,.terminal-frame__btn{font-family:var(--font-sans);font-weight:500;border-radius:var(--radius)}
+    .copy-btn,.step-toggle-btn{border-radius:6px}
+    .code-panel{border:1px solid var(--border-subtle);border-radius:var(--radius-xl);overflow:hidden}
+    .code-panel__bar{background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle)}
+    .terminal-frame{border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden}
+    .terminal-frame__bar{background:var(--bg-secondary)}
+    .guide-step-item__badge{background:var(--bg-card);border:1px solid var(--border-subtle);color:var(--accent)}
+    .step-toggle-btn.is-done{color:var(--green);border-color:var(--green)}
+    .guide-section.is-completed .guide-section__badge{background:rgba(167,217,135,0.12);border-color:var(--green);color:var(--green)}
+    .guide-toc-link__dot{background:var(--text-muted)}
+    .social-btn{border:1px solid var(--border-subtle);border-radius:8px}
+    .skip-link{
+      position:fixed;
+      left:0;
+      top:-9999px;
+      z-index:9999;
+      padding:var(--space-2) var(--space-4);
+      background:var(--bg-card);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:0 4px 12px rgba(0,0,0,0.45);
+      text-decoration:none;
+      font-weight:500;
+      font-size:0.95rem
+    }
+    .skip-link:focus{
+      top:var(--space-2);
+      left:var(--space-2);
+      outline:2px solid var(--accent);
+      outline-offset:2px
+    }
+    .guide-hero__badge{border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card)}
+    .guide-divider{border:none;border-top:1px solid var(--border-subtle);margin:var(--space-12)0}
+    @media(max-width:640px){.guide-container{padding:var(--space-4)var(--space-3)}.guide-hero__title{font-size:1.5rem}}
+    @media(prefers-reduced-motion:reduce){*,::before,::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+  </style>
+  <script defer src="assets/js/guide.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#guide-main">Saltar al contenido</a>
+  <header class="guide-header">
+    <div class="guide-header__inner">
+      <a class="guide-brand" href="#top" aria-label="Inicio de la guía">
+        <span class="guide-brand__prompt" aria-hidden="true">❯_</span>
+        <span class="guide-brand__title">bash<span>.terminal</span></span>
+        <span class="guide-brand__badge" id="brand-badge">Guía de Configuración</span>
+      </a>
+      <div class="guide-header__center">
+        <div class="progress-indicator">
+          <span class="progress-indicator__bar"><span class="progress-indicator__fill" id="header-progress-fill"></span></span>
+          <span class="progress-indicator__text" id="header-progress-text">0 / 10 completados</span>
+        </div>
+      </div>
+      <div class="guide-header__actions">
+        <a class="guide-home-link" href="#top" aria-label="Volver al inicio">← Inicio</a>
+        <button class="site-control" id="theme-toggle" type="button" aria-pressed="false" aria-label="Cambiar al modo oscuro" title="Cambiar tema">
+          <svg class="theme-icon theme-icon--moon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.4 12.2A7 7 0 0 1 7.8 3.6a7.1 7.1 0 1 0 8.6 8.6Z"/></svg>
+          <svg class="theme-icon theme-icon--sun" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.4"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4m8.8 8.8 1.4 1.4m0-11.6-1.4 1.4m-8.8 8.8-1.4 1.4"/></svg>
+        </button>
+        <button class="site-control" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar sonidos" title="Sonidos desactivados">
+          <svg class="sound-icon sound-icon--off" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8v4h3l4 3V5L6 8H3Z"/><path d="m14 8 4 4m0-4-4 4"/></svg>
+          <svg class="sound-icon sound-icon--on" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8v4h3l4 3V5L6 8H3Z"/><path d="M13 7a4 4 0 0 1 0 6m2-8a7 7 0 0 1 0 10"/></svg>
+        </button>
+        <button class="toc-toggle-btn" id="toc-toggle" type="button" aria-expanded="false" aria-controls="guide-toc">
+          <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg>
+          <span id="toc-toggle-label">Índice</span>
+        </button>
+        <div class="lang-switch" role="group" aria-label="Idioma" id="lang-switch">
+          <button type="button" data-set-lang="es" aria-pressed="true" lang="es">ES</button>
+          <button type="button" data-set-lang="pt" aria-pressed="false" lang="pt">PT</button>
+          <button type="button" data-set-lang="en" aria-pressed="false" lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="guide-container" id="top">
+    <aside class="guide-sidebar" id="guide-toc" aria-label="Índice de la guía">
+      <div class="guide-sidebar__header">
+        <h2 class="guide-sidebar__title" id="toc-title">Índice de pasos</h2>
+        <span class="guide-sidebar__count" id="toc-count">10 pasos</span>
+      </div>
+      <nav class="guide-toc-nav" id="toc-nav"></nav>
+      <div class="guide-sidebar__footer">
+        <button type="button" class="reset-progress-btn" id="reset-progress-btn">Reiniciar progreso</button>
+      </div>
+    </aside>
+
+    <main class="guide-content" id="guide-main">
+      <section class="guide-hero">
+        <div class="guide-hero__badge">
+          <span class="guide-brand__prompt" aria-hidden="true">❯_</span>
+          <span class="guide-hero__badge-text">terminal.bash --customize</span>
+        </div>
+        <h1 class="guide-hero__title" id="guide-hero-title">Configuración de Terminal Bash en Ubuntu</h1>
+        <div class="guide-hero__tags">
+          <span class="tech-tag">Ubuntu 24.04+</span>
+          <span class="tech-tag">Oh My Posh</span>
+          <span class="tech-tag">FiraCode NF</span>
+          <span class="tech-tag">Eza</span>
+          <span class="tech-tag">FZF</span>
+          <span class="tech-tag">Kanagawa Theme</span>
+        </div>
+
+        <figure class="guide-figure guide-figure--hero">
+          <div class="terminal-frame">
+            <div class="terminal-frame__bar">
+              <span class="terminal-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="terminal-frame__title">jdswe@ubuntu: ~ (bash)</span>
+              <button type="button" class="zoom-icon-btn" data-zoom-src="assets/images/Terminal.png" data-zoom-alt="Resultado Final Terminal" aria-label="Ampliar imagen">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5M7 5v4M5 7h4"/></svg>
+              </button>
+            </div>
+            <button type="button" class="terminal-frame__btn" data-zoom-src="assets/images/Terminal.png" data-zoom-alt="Resultado Final Terminal">
+              <img src="assets/images/Terminal.png" alt="Resultado Final Terminal" class="terminal-frame__img" decoding="async" loading="lazy">
+              <span class="terminal-frame__zoom-overlay">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5M7 5v4M5 7h4"/></svg>
+                <span>Haz clic para ampliar</span>
+              </span>
+            </button>
+          </div>
+          <figcaption class="guide-figure__caption" id="guide-hero-caption">Resultado Final Terminal</figcaption>
+        </figure>
+
+        <p class="guide-hero__lead" id="guide-hero-lead">Guía paso a paso para personalizar y optimizar la experiencia de uso en la terminal Bash de Ubuntu integrando Oh My Posh, Eza, fuentes Nerd Fonts y FZF.</p>
+      </section>
+      <div class="guide-divider" aria-hidden="true"></div>
+
+      <div class="guide-sections" id="guide-sections"></div>
+    </main>
+  </div>
+  <footer class="guide-footer">
+    <div class="guide-footer__inner">
+      <div class="guide-footer__left">
+        <span class="guide-brand__prompt" aria-hidden="true">❯_</span>
+        <div>
+          <span class="guide-footer__brand-name">bash.terminal</span>
+          <p class="guide-footer__tagline" id="footer-tagline">Guía paso a paso para personalizar la terminal Bash en Ubuntu.</p>
+        </div>
+      </div>
+      <div class="guide-footer__right">
+        <div class="guide-footer__social">
+          <a class="social-btn social-btn--github" href="https://github.com/jdswe" target="_blank" rel="noopener noreferrer" aria-label="Perfil de GitHub de jdswe (José Carranza)" id="footer-github-link">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.47 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a class="social-btn social-btn--youtube" href="https://www.youtube.com/@CodingGamesJose" target="_blank" rel="noopener noreferrer" aria-label="Canal de YouTube Coding &amp; Games por Jose Carranza" id="footer-youtube-link">
+            <img src="assets/images/coding-and-games.png" alt="Coding &amp; Games por Jose Carranza" width="112" height="42" decoding="async" loading="lazy">
+          </a>
+        </div>
+        <div class="guide-footer__meta">
+          <a href="#top" class="back-to-top-link" id="back-to-top">Volver arriba ↑</a>
+          <p class="guide-footer__copyright" id="footer-copyright">© 2026 bash.terminal · Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <dialog class="lightbox-dialog" id="lightbox-dialog" aria-label="Visor de imagen">
+    <div class="lightbox-dialog__content">
+      <div class="lightbox-dialog__bar">
+        <span class="terminal-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="lightbox-dialog__title" id="lightbox-title">Captura de la terminal</span>
+        <button type="button" class="icon-btn lightbox-dialog__close" id="lightbox-close" aria-label="Cerrar visor">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        </button>
+      </div>
+      <div class="lightbox-dialog__img-wrap">
+        <img alt="" id="lightbox-img" class="lightbox-dialog__img">
+      </div>
+    </div>
+  </dialog>
+
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+    <span class="toast__icon" aria-hidden="true">❯</span>
+    <span id="toast-text"></span>
+  </div>
+</body>
+</html>
