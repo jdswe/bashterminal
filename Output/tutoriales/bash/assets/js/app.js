@@ -439,7 +439,7 @@
           "<span>" +
           t(UI.toc.markStep) +
           "</span></button>"
-        : '<span class="guide-section__ref-chip">' + t(UI.summary.chip) + "</span>";
+        : '<span class="guide-section__ref-chip">' + t(section.chip || UI.summary.chip) + "</span>";
 
       return (
         '<section class="guide-section' +

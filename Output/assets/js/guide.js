@@ -559,12 +559,22 @@ window.GUIDE_CONTENT = {
     },
 
     {
-      id: "paso-11",
-      number: "11",
+      id: "powershell",
+      isStep: false,
+      badge: {
+        es: "OPCIONAL",
+        en: "OPTIONAL",
+        pt: "OPCIONAL"
+      },
+      chip: {
+        es: "No cuenta para el progreso",
+        en: "Not counted in progress",
+        pt: "Não conta para o progresso"
+      },
       title: {
-        es: "11. Configurar PowerShell (opcional)",
-        en: "11. Set up PowerShell (optional)",
-        pt: "11. Configurar o PowerShell (opcional)"
+        es: "Configurar PowerShell (opcional)",
+        en: "Set up PowerShell (optional)",
+        pt: "Configurar o PowerShell (opcional)"
       },
       lead: {
         es: "Si también trabajas con PowerShell, puedes llevar el mismo entorno visual y los mismos atajos de Eza a tu perfil de PowerShell.",
@@ -674,11 +684,6 @@ window.GUIDE_CONTENT = {
             "    function lg {",
             "        eza -l --git --icons @args",
             "    }",
-            "",
-            "    # Original Linux LS",
-            "    function lso {",
-            "        /usr/bin/ls @args",
-            "    }",
             "}"
           ].join("\n")
         },
@@ -691,9 +696,9 @@ window.GUIDE_CONTENT = {
             pt: "Nota:"
           },
           text: {
-            es: "Cierra y vuelve a abrir PowerShell, o recarga el perfil con `. $PROFILE`, para aplicar los cambios. Si usas PowerShell en Windows, ajusta la función `lso` a la ruta de `ls` de tu sistema.",
-            en: "Close and reopen PowerShell, or reload the profile with `. $PROFILE`, to apply the changes. If you use PowerShell on Windows, adjust the `lso` function to your system's `ls` path.",
-            pt: "Feche e reabra o PowerShell, ou recarregue o perfil com `. $PROFILE`, para aplicar as alterações. Se usar o PowerShell no Windows, ajuste a função `lso` para o caminho do `ls` do seu sistema."
+            es: "Cierra y vuelve a abrir PowerShell, o recarga el perfil con `. $PROFILE`, para aplicar los cambios.",
+            en: "Close and reopen PowerShell, or reload the profile with `. $PROFILE`, to apply the changes.",
+            pt: "Feche e reabra o PowerShell, ou recarregue o perfil com `. $PROFILE`, para aplicar as alterações."
           }
         }
       ]
@@ -1558,7 +1563,7 @@ window.GUIDE_UI = {
           "<span>" +
           t(UI.toc.markStep) +
           "</span></button>"
-        : '<span class="guide-section__ref-chip">' + t(UI.summary.chip) + "</span>";
+        : '<span class="guide-section__ref-chip">' + t(section.chip || UI.summary.chip) + "</span>";
 
       return (
         '<section class="guide-section' +
