@@ -176,9 +176,10 @@
     return result;
   }
 
-  function renderCodeBlock(code) {
+  function renderCodeBlock(code, kind) {
     const id = "code-" + ++codeCounter;
     codeRegistry.set(id, code);
+    const language = kind === "powershell" ? "powershell" : "bash";
 
     const lines = code.split("\n");
     const codeHtml = lines
@@ -197,7 +198,9 @@
       '<div class="code-panel__bar">' +
       '<span class="code-panel__label">' +
       ICONS.terminal +
-      "<span>bash</span></span>" +
+      "<span>" +
+      language +
+      "</span></span>" +
       '<button type="button" class="copy-btn" data-copy-id="' +
       id +
       '">' +
@@ -301,7 +304,7 @@
         return '<h3 class="guide-h3">' + inline(t(block.text)) + "</h3>";
 
       case "code":
-        return renderCodeBlock(block.code);
+        return renderCodeBlock(block.code, block.kind);
 
       case "image":
         return renderFigure(block);

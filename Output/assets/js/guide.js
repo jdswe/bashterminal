@@ -559,6 +559,147 @@ window.GUIDE_CONTENT = {
     },
 
     {
+      id: "paso-11",
+      number: "11",
+      title: {
+        es: "11. Configurar PowerShell (opcional)",
+        en: "11. Set up PowerShell (optional)",
+        pt: "11. Configurar o PowerShell (opcional)"
+      },
+      lead: {
+        es: "Si también trabajas con PowerShell, puedes llevar el mismo entorno visual y los mismos atajos de Eza a tu perfil de PowerShell.",
+        en: "If you also work with PowerShell, you can bring the same visual environment and Eza shortcuts to your PowerShell profile.",
+        pt: "Se você também trabalha com PowerShell, pode levar o mesmo ambiente visual e os mesmos atalhos do Eza para o seu perfil do PowerShell."
+      },
+      blocks: [
+        {
+          type: "p",
+          text: {
+            es: "Instala el módulo **Terminal-Icons** desde la galería oficial de PowerShell. Si te pregunta si deseas instalar módulos de un repositorio no confiable, selecciona **A** (Sí a todo):",
+            en: "Install the **Terminal-Icons** module from the official PowerShell gallery. If it asks whether you want to install modules from an untrusted repository, select **A** (Yes to All):",
+            pt: "Instale o módulo **Terminal-Icons** na galeria oficial do PowerShell. Se perguntar se deseja instalar módulos de um repositório não confiável, selecione **A** (Sim para tudo):"
+          }
+        },
+        {
+          type: "code",
+          kind: "powershell",
+          code: "Install-Module -Name Terminal-Icons -Repository PSGallery"
+        },
+        {
+          type: "p",
+          text: {
+            es: "Crea el archivo de perfil de PowerShell si todavía no existe:",
+            en: "Create the PowerShell profile file if it does not exist yet:",
+            pt: "Crie o arquivo de perfil do PowerShell caso ele ainda não exista:"
+          }
+        },
+        {
+          type: "code",
+          kind: "powershell",
+          code: "New-Item -Path $PROFILE -Type File -Force"
+        },
+        {
+          type: "p",
+          text: {
+            es: "Abre el perfil con nano para editarlo:",
+            en: "Open the profile with nano to edit it:",
+            pt: "Abra o perfil com nano para editá-lo:"
+          }
+        },
+        {
+          type: "code",
+          kind: "powershell",
+          code: "nano $PROFILE"
+        },
+        {
+          type: "p",
+          text: {
+            es: "Pega la siguiente configuración. Puedes cambiar `pure` por el tema de **Oh My Posh** que prefieras:",
+            en: "Paste the following configuration. You can replace `pure` with whichever **Oh My Posh** theme you prefer:",
+            pt: "Cole a seguinte configuração. Você pode substituir `pure` pelo tema do **Oh My Posh** que preferir:"
+          }
+        },
+        {
+          type: "code",
+          kind: "powershell",
+          code: [
+            'oh-my-posh init pwsh --config "pure" | Invoke-Expression',
+            "Import-Module Terminal-Icons",
+            "Set-PSReadLineOption -PredictionViewStyle ListView",
+            "",
+            "if (Get-Command eza -ErrorAction SilentlyContinue) {",
+            "",
+            "    # Default LS",
+            "    function ls {",
+            "        eza --icons --group-directories-first @args",
+            "    }",
+            "",
+            "    # Detailed listings",
+            "    function ll {",
+            "        eza -l --icons --git --group-directories-first @args",
+            "    }",
+            "",
+            "    # All files",
+            "    function la {",
+            "        eza -a --icons --group-directories-first @args",
+            "    }",
+            "",
+            "    # Detailed listing with hidden files",
+            "    function lla {",
+            "        eza -la --icons --git --group-directories-first @args",
+            "    }",
+            "",
+            "    # Directory tree",
+            "    function lt {",
+            "        eza --tree --level=2 --icons --group-directories-first @args",
+            "    }",
+            "",
+            "    function lta {",
+            "        eza --tree --level=3 -a --icons --group-directories-first @args",
+            "    }",
+            "",
+            "    # Specialized listings",
+            "    function l1 {",
+            "        eza -1 --icons @args",
+            "    }",
+            "",
+            "    function ld {",
+            "        eza -D --icons @args",
+            "    }",
+            "",
+            "    function lf {",
+            "        eza -f --icons @args",
+            "    }",
+            "",
+            "    function lg {",
+            "        eza -l --git --icons @args",
+            "    }",
+            "",
+            "    # Original Linux LS",
+            "    function lso {",
+            "        /usr/bin/ls @args",
+            "    }",
+            "}"
+          ].join("\n")
+        },
+        {
+          type: "callout",
+          tone: "note",
+          title: {
+            es: "Nota:",
+            en: "Note:",
+            pt: "Nota:"
+          },
+          text: {
+            es: "Cierra y vuelve a abrir PowerShell, o recarga el perfil con `. $PROFILE`, para aplicar los cambios. Si usas PowerShell en Windows, ajusta la función `lso` a la ruta de `ls` de tu sistema.",
+            en: "Close and reopen PowerShell, or reload the profile with `. $PROFILE`, to apply the changes. If you use PowerShell on Windows, adjust the `lso` function to your system's `ls` path.",
+            pt: "Feche e reabra o PowerShell, ou recarregue o perfil com `. $PROFILE`, para aplicar as alterações. Se usar o PowerShell no Windows, ajuste a função `lso` para o caminho do `ls` do seu sistema."
+          }
+        }
+      ]
+    },
+
+    {
       id: "resumen",
       isStep: false,
       badge: {
@@ -1154,9 +1295,10 @@ window.GUIDE_UI = {
     return result;
   }
 
-  function renderCodeBlock(code) {
+  function renderCodeBlock(code, kind) {
     const id = "code-" + ++codeCounter;
     codeRegistry.set(id, code);
+    const language = kind === "powershell" ? "powershell" : "bash";
 
     const lines = code.split("\n");
     const codeHtml = lines
@@ -1175,7 +1317,9 @@ window.GUIDE_UI = {
       '<div class="code-panel__bar">' +
       '<span class="code-panel__label">' +
       ICONS.terminal +
-      "<span>bash</span></span>" +
+      "<span>" +
+      language +
+      "</span></span>" +
       '<button type="button" class="copy-btn" data-copy-id="' +
       id +
       '">' +
@@ -1279,7 +1423,7 @@ window.GUIDE_UI = {
         return '<h3 class="guide-h3">' + inline(t(block.text)) + "</h3>";
 
       case "code":
-        return renderCodeBlock(block.code);
+        return renderCodeBlock(block.code, block.kind);
 
       case "image":
         return renderFigure(block);
