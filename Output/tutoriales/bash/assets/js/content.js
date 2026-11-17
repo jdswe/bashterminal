@@ -345,19 +345,6 @@ window.GUIDE_CONTENT = {
           type: "code",
           kind: "bash",
           code: "source ~/.bashrc"
-        },
-        {
-          type: "p",
-          text: {
-            es: "Tip: Puedes previsualizar y listar todos los temas instalados localmente directamente en tu terminal ejecutando:",
-            en: "Tip: You can preview and list all locally installed themes directly inside your terminal by running:",
-            pt: "Dica: Você pode visualizar e listar todos os temas instalados localmente direto no seu terminal executando:"
-          }
-        },
-        {
-          type: "code",
-          kind: "bash",
-          code: "oh-my-posh get themes"
         }
       ]
     },
