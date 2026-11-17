@@ -560,26 +560,16 @@ window.GUIDE_CONTENT = {
 
     {
       id: "powershell",
-      isStep: false,
-      badge: {
-        es: "OPCIONAL",
-        en: "OPTIONAL",
-        pt: "OPCIONAL"
-      },
-      chip: {
-        es: "No cuenta para el progreso",
-        en: "Not counted in progress",
-        pt: "Não conta para o progresso"
-      },
+      number: "11",
       title: {
-        es: "Configurar PowerShell (opcional)",
-        en: "Set up PowerShell (optional)",
-        pt: "Configurar o PowerShell (opcional)"
+        es: "11. Configurar PowerShell",
+        en: "11. Set up PowerShell",
+        pt: "11. Configurar o PowerShell"
       },
       lead: {
-        es: "Si también trabajas con PowerShell, puedes llevar el mismo entorno visual y los mismos atajos de Eza a tu perfil de PowerShell.",
-        en: "If you also work with PowerShell, you can bring the same visual environment and Eza shortcuts to your PowerShell profile.",
-        pt: "Se você também trabalha com PowerShell, pode levar o mesmo ambiente visual e os mesmos atalhos do Eza para o seu perfil do PowerShell."
+        es: "PowerShell es otra terminal, pero reutiliza gran parte de la configuración que ya montamos en Bash: Oh My Posh, Eza y los mismos atajos.",
+        en: "PowerShell is another terminal, but it reuses much of the configuration we already set up in Bash: Oh My Posh, Eza, and the same shortcuts.",
+        pt: "O PowerShell é outro terminal, mas reutiliza grande parte da configuração que já montamos no Bash: Oh My Posh, Eza e os mesmos atalhos."
       },
       blocks: [
         {
